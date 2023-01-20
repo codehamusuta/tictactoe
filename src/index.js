@@ -2,21 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-// class Square extends React.Component {
-//     render() {
-//       return (
-//         <button 
-//             className="square" 
-//             onClick={() => this.props.onClick()}
-//         >
-//           {this.props.value}
-//         </button>
-//       );
-//     }
-//   }
-
-//replace Square class above to function components
-//both are equivalent 
+//this is a function component
 function Square(props) {
     return (
         <button 
@@ -31,7 +17,8 @@ function Square(props) {
 class Board extends React.Component {
     renderSquare(i) {
         return (
-        <Square 
+        <Square
+            key={i}
             value={this.props.squares[i]}
             onClick={() => this.props.onClick(i)}
         />
@@ -46,7 +33,7 @@ class Board extends React.Component {
             items.push(this.renderSquare(i));
         }
         return (
-            <div className="board-row">{items}</div>
+            <div className="board-row" key={row}>{items}</div>
         )
     };
 
@@ -56,6 +43,72 @@ class Board extends React.Component {
             rows.push(this.renderRow(row));
         }
         return <div>{rows}</div>
+    }
+}
+
+class MoveHistory extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            reverse: false,
+        }
+    }
+
+    getPosition(i) {
+        const row = ~~(i/3) + 1;
+        const col = i%3 + 1;
+        return `(${row},${col})`
+    }
+
+    moveDesc(step, move) {
+        if (move == 0){
+            return ''
+        } else {
+            const player = (move % 2) === 0 ? 'X': 'O';
+            const moveLoc = this.getPosition(step.movPos);
+            return '[' + player + ' marked ' + moveLoc + ']';
+        }
+    }
+
+    toggleDirection() {
+        this.setState({
+            reverse: !this.state.reverse
+        });
+    }
+    
+    render() {
+        const moves = this.props.history.map((step, move) => {
+            //render all steps
+            const desc2 = move ? 
+                'Go to move #' + move :
+                'Go to game start';
+
+            const className = `history-button ${move == this.props.stepNumber? "selected": null}`
+
+            //move # is unique in this problem
+            return (
+                <li className={className} key={move}>
+                    <span>{move+1}.</span>
+                    <button onClick={() => this.props.jumpTo(move)}>{desc2}</button>
+                    <span>{this.moveDesc(step, move)}</span>
+                </li>
+            );
+        });
+
+        return (
+            <div className="game-info">
+                <h4>Move History 
+                    <button 
+                        className="toggle"
+                        onClick={()=>this.toggleDirection()}
+                        title="Change move history order"
+                    >
+                        <i className={this.state.reverse? "arrow up": "arrow down"}></i>
+                    </button>
+                </h4>
+                <ol>{this.state.reverse? moves.reverse(): moves}</ol>
+            </div>    
+        )
     }
 }
 
@@ -103,44 +156,10 @@ class Game extends React.Component {
         })
     }
 
-    getPosition(i) {
-        const row = ~~(i/3) + 1;
-        const col = i%3 + 1;
-        return `(${row},${col})`
-    }
-
-    moveDesc(step, move) {
-        if (move == 0){
-            return ''
-        } else {
-            const player = (move % 2) === 0 ? 'X': 'O';
-            const moveLoc = this.getPosition(step.movPos);
-            return '[' + player + ' marked ' + moveLoc + ']';
-        }
-    }
-
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
-
-        const moves = history.map((step, move) => {
-            //render all steps
-            const desc2 = move ? 
-                'Go to move #' + move :
-                'Go to game start';
-
-            const className = `history-button ${move == this.state.stepNumber? "selected": null}`
-
-            //move # is unique in this problem
-            return (
-                <li className={className} key={move}>
-                    <span>{move+1}.</span>
-                    <button onClick={() => this.jumpTo(move)}>{desc2}</button>
-                    <span>{this.moveDesc(step, move)}</span>
-                </li>
-            );
-        });
 
         let status;
         if (winner) {
@@ -152,15 +171,17 @@ class Game extends React.Component {
         return (
         <div className="game">
             <div className="game-board">
-            <Board 
-                squares={current.squares}
-                onClick={(i) => this.handleClick(i)}
+                <Board 
+                    squares={current.squares}
+                    onClick={(i) => this.handleClick(i)}
+                />
+                <h5>{status}</h5>
+            </div>
+            <MoveHistory 
+                history={this.state.history}
+                stepNumber={this.state.stepNumber}
+                jumpTo={(move)=> this.jumpTo(move)}
             />
-            </div>
-            <div className="game-info">
-                <div>{status}</div>
-                <ol>{moves}</ol>
-            </div>
         </div>
         );
     }

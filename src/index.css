@@ -47,7 +47,13 @@ ol, ul {
 }
 
 .game-info {
-    margin-left: 20px;
+    margin-left: 40px;
+}
+.game-info .toggle {
+    margin-left: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
 }
 
 .history-button {
@@ -62,7 +68,7 @@ ol, ul {
     text-align: left;
     background: None;
     margin-right: 10px;
-    padding: 7px;
+    padding: 5px;
     border-radius: 5px;
     border: None;
     cursor: pointer;
@@ -70,4 +76,19 @@ ol, ul {
 .history-button > button:hover {
     color: blue;
     text-decoration: underline;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+.arrow.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+.arrow.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
