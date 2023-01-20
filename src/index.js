@@ -98,9 +98,9 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
-                movePos: null,
+                movePos: null,  //track which square current player marks [0 - 9]
             }],
-            stepNumber: 0,
+            stepNumber: 0,  //tracks which step to show on the board
             xIsNext: true, 
         };
     }
@@ -129,6 +129,7 @@ class Game extends React.Component {
     }
 
     jumpTo(step) {
+        //update stepNumber to show step
         this.setState({
             stepNumber: step, 
             xIsNext: (step % 2) === 0,
@@ -147,7 +148,7 @@ class Game extends React.Component {
         } else {
             const player = (move % 2) === 0 ? 'X': 'O';
             const moveLoc = this.getPosition(step.movPos);
-            return player + ' marked ' + moveLoc;
+            return '[' + player + ' marked ' + moveLoc + ']';
         }
     }
 
@@ -157,15 +158,17 @@ class Game extends React.Component {
         const winner = calculateWinner(current.squares);
 
         const moves = history.map((step, move) => {
-            
+            //render all steps
             const desc2 = move ? 
                 'Go to move #' + move :
                 'Go to game start';
 
-            
+            const className = `history-button ${move == this.state.stepNumber? "selected": null}`
+
             //move # is unique in this problem
             return (
-                <li className="history-button" key={move}> 
+                <li className={className} key={move}>
+                    <span>{move+1}.</span>
                     <button onClick={() => this.jumpTo(move)}>{desc2}</button>
                     <span>{this.moveDesc(step, move)}</span>
                 </li>
