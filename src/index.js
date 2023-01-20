@@ -29,37 +29,6 @@ function Square(props) {
 }
   
 class Board extends React.Component {
-    // Refactor: shifted to parent to enable history
-    // constructor (props) {
-    //     super(props);
-    //     this.state = {
-    //         squares: Array(9).fill(null),
-    //         xIsNext: true,
-    //     }
-    // }
-    // handleClick(i) {
-    //     /*
-    //     use slice to create a copy of squares array instead of modifying the existing array
-    //     so as to achieve immutability
-    //     advantages: 
-    //         (1) simplicity, 
-    //         (2) allows time travel, 
-    //         (3) easy to detect changes,
-    //         (4) allows for 'pure' react components
-    //     */
-    //     const squares = this.state.squares.slice(); 
-
-    //     //ignore a click if there is a winner or square is already filled
-    //     if (calculateWinner(squares) || squares[i]) {
-    //         return;
-    //     }
-    //     squares[i] = this.state.xIsNext ? 'X' : 'O';
-    //     this.setState({
-    //         squares: squares,
-    //         xIsNext: !this.state.xIsNext,
-    //     });
-    // }
-
     renderSquare(i) {
         return (
         <Square 
@@ -69,26 +38,24 @@ class Board extends React.Component {
         );
     }
 
-    render() {
+    renderRow(row) {
+        const items = []
+        let i;
+        for (let col = 0; col < 3; col++) {
+            i = row*3 + col;
+            items.push(this.renderSquare(i));
+        }
         return (
-        <div>
-            <div className="board-row">
-                {this.renderSquare(0)}
-                {this.renderSquare(1)}
-                {this.renderSquare(2)}
-            </div>
-            <div className="board-row">
-                {this.renderSquare(3)}
-                {this.renderSquare(4)}
-                {this.renderSquare(5)}
-            </div>
-            <div className="board-row">
-                {this.renderSquare(6)}
-                {this.renderSquare(7)}
-                {this.renderSquare(8)}
-            </div>
-        </div>
-        );
+            <div className="board-row">{items}</div>
+        )
+    };
+
+    render() {
+        const rows = [];
+        for (let row = 0; row < 3; row++) {
+            rows.push(this.renderRow(row));
+        }
+        return <div>{rows}</div>
     }
 }
 
