@@ -90,7 +90,7 @@ class MoveHistory extends React.Component {
             //move # is unique in this problem
             return (
                 <li className={className} key={move}>
-                    <span>{move+1}.</span>
+                    <span>{move}.</span>
                     <button onClick={() => this.props.jumpTo(move)}>{desc2}</button>
                     <span>{this.moveDesc(step, move)}</span>
                 </li>
@@ -166,6 +166,8 @@ class Game extends React.Component {
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
+        } else if (this.state.stepNumber == 9) {
+            status = 'Draw Game';
         } else {
             status = 'Next player: ' + (this.state.xIsNext? 'X': 'O');
         }
