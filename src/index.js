@@ -98,6 +98,7 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
+                movePos: null,
             }],
             stepNumber: 0,
             xIsNext: true, 
@@ -120,6 +121,7 @@ class Game extends React.Component {
             //use concat instead of push because concat doesn't mutate the original
             history: history.concat([{
                 squares: squares,
+                movPos: i
             }]),
             stepNumber: history.length, //not +1 because history is the old array
             xIsNext: !this.state.xIsNext,
@@ -133,20 +135,39 @@ class Game extends React.Component {
         })
     }
 
+    getPosition(i) {
+        const row = ~~(i/3) + 1;
+        const col = i%3 + 1;
+        return `(${row},${col})`
+    }
+
+    moveDesc(step, move) {
+        if (move == 0){
+            return ''
+        } else {
+            const player = (move % 2) === 0 ? 'X': 'O';
+            const moveLoc = this.getPosition(step.movPos);
+            return player + ' marked ' + moveLoc;
+        }
+    }
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
 
         const moves = history.map((step, move) => {
-            const desc = move ? 
+            
+            const desc2 = move ? 
                 'Go to move #' + move :
                 'Go to game start';
 
+            
             //move # is unique in this problem
             return (
-                <li key={move}> 
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                <li className="history-button" key={move}> 
+                    <button onClick={() => this.jumpTo(move)}>{desc2}</button>
+                    <span>{this.moveDesc(step, move)}</span>
                 </li>
             );
         });
@@ -200,3 +221,4 @@ function calculateWinner(squares) {
     }
     return null;
 }
+

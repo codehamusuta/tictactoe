@@ -3,21 +3,21 @@ body {
     margin: 20px;
   }
   
-  ol, ul {
+ol, ul {
     padding-left: 30px;
-  }
-  
-  .board-row:after {
+}
+
+.board-row:after {
     clear: both;
     content: "";
     display: table;
-  }
-  
-  .status {
+}
+
+.status {
     margin-bottom: 10px;
-  }
-  
-  .square {
+}
+
+.square {
     background: #fff;
     border: 1px solid #999;
     float: left;
@@ -30,22 +30,40 @@ body {
     padding: 0;
     text-align: center;
     width: 34px;
-  }
-  
-  .square:focus {
+}
+
+.square:focus {
     outline: none;
-  }
-  
-  .kbd-navigation .square:focus {
+}
+
+.kbd-navigation .square:focus {
     background: #ddd;
-  }
-  
-  .game {
+}
+
+.game {
     display: flex;
     flex-direction: row;
-  }
-  
-  .game-info {
+}
+
+.game-info {
     margin-left: 20px;
-  }
-  
+}
+
+.history-button {
+    padding: 2px;
+}
+.history-button > button {
+    width: 120px;
+    text-align: left;
+    /* background: None; */
+    background: rgba(55, 55, 55, 0.1);
+    margin-right: 10px;
+    padding: 7px;
+    border-radius: 5px;
+    border: None;
+    cursor: pointer;
+}
+.history-button > button:hover {
+    background-color:rgba(55, 55, 100, 0.15);
+    color: blue;
+}
